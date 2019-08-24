@@ -9,8 +9,8 @@ function SimpleShader(vertexShaderID, fragmentShaderID){
 
     var gl = gEngine.Core.getGL();
 
-    var vertexShader = this._loadAndCompileShader(vertexShaderID, gl.VERTEX_SHADER);
-    var fragmentShader = this._loadAndCompileShader(fragmentShaderID, gl.FRAGMENT_SHADER);
+    var vertexShader = this._compileShader(vertexShaderID, gl.VERTEX_SHADER);
+    var fragmentShader = this._compileShader(fragmentShaderID, gl.FRAGMENT_SHADER);
     
     this.mCompiledShader = gl.createProgram();
     gl.attachShader(this.mCompiledShader, vertexShader);
@@ -37,25 +37,11 @@ SimpleShader.prototype.loadObjectTransform = function(modelTransform){
     gl.uniformMatrix4fv(this.mModelTransform, false, modelTransform);
 };
 
-SimpleShader.prototype._loadAndCompileShader = function(filePath, shaderType){
-    var shaderText, shaderSource, compiledShader;
+SimpleShader.prototype._compileShader = function(filePath, shaderType){
     var gl = gEngine.Core.getGL();
-    var xmlReq = new XMLHttpRequest();
+    var shaderSource = null,compiledShader = null;
 
-    xmlReq.open('GET', filePath, false);
-    try {
-        xmlReq.send();
-    } catch (error) {
-        alert("Failed to load shader: " + filePath);
-        return null;
-    }
-
-    if (shaderSource === null) {
-        alert("WARNING: Loading of:" + filePath + " Failed!");
-        return null;
-    }
-
-    shaderSource = xmlReq.responseText;
+    shaderSource = gEngine.ResourceMap.retrieveAsset(filePath);
     compiledShader = gl.createShader(shaderType);
 
     gl.shaderSource(compiledShader, shaderSource);

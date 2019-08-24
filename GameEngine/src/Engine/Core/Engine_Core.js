@@ -15,10 +15,16 @@ gEngine.Core = (function() {
         }
     }
 
-    var initializeEngineCore = function (htmlCanvasID){
+    var initializeEngineCore = function (htmlCanvasID, myGame){
         _initializeWebGL(htmlCanvasID);
         gEngine.VertexBuffer.initialize();
         gEngine.Input.initialize();
+        gEngine.DefaultResources.initialize(function() {startScene(myGame);});
+    };
+
+    var startScene = function(scene){
+        scene.loadScene();
+        gEngine.GameLoop.start(scene);
     };
 
     var clearCanvas = function(color){
@@ -26,10 +32,17 @@ gEngine.Core = (function() {
         mGL.clear(mGL.COLOR_BUFFER_BIT);
     };
 
+    var inheritPrototype = function(subClass, superClass){
+        var prototype = Object.create(superClass.prototype);
+        prototype.constructor = subClass;
+        subClass.prototype = prototype;
+    };
 
 
     var mPublic = {
         getGL: getGL,
+        startScene: startScene,
+        inheritPrototype: inheritPrototype,
         initializeEngineCore: initializeEngineCore,
         clearCanvas: clearCanvas
     };

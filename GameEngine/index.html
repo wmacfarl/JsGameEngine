@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Example 2.6: The Parameterized Fragment Shader Project</title>
+        <title>Game Engine Prototype</title>
         <link rel ="icon" type ="image/x-icon" href="./favicon.png">
 
         <!-- the following says there are javascript source code contained in 
@@ -13,17 +13,26 @@
         <script type="text/javascript" src="src/Engine/Core/Engine_GameLoop.js"></script>
         <script type="text/javascript" src="src/Engine/Core/Engine_VertexBuffer.js"></script>
         <script type="text/javascript" src="src/Engine/Core/Engine_Input.js"></script>
+        <script type="text/javascript" src="src/Engine/Core/Resources/Engine_TextFileLoader.js"></script>
+        <script type="text/javascript" src="src/Engine/Core/Resources/Engine_DefaultResources.js"></script>
+        <script type="text/javascript" src="src/Engine/Core/Resources/Engine_ResourceMap.js"></script>
+
         <script type="text/javascript" src="src/Engine/SimpleShader.js"></script>
         <script type="text/javascript" src="src/Engine/Renderable.js"></script>
         <script type="text/javascript" src="src/Engine/Transform.js"></script>
         <script type="text/javascript" src="src/Engine/Camera.js"></script>
+        <script type="text/javascript" src="src/Engine/Scene.js"></script>
 
         <!-- Client game code -->
+        <script type="text/javascript" src="src/MyGame/SceneFileParser.js"></script>
         <script type="text/javascript" src="src/MyGame/MyGame.js"></script>
+        <script type="text/javascript" src="src/MyGame/BlueLevel.js"></script>
 
     </head>
 
-    <body onload="new MyGame('GLCanvas');">
+    <body onload="var myGame = new MyGame();
+                  gEngine.Core.initializeEngineCore('GLCanvas', myGame);
+                  ">
         <canvas id="GLCanvas" width="640" height="480">
             <!-- GLCanvas is the area we will draw in: a 640x480 area. -->
             Your browser does not support the HTML5 canvas.
