@@ -22,9 +22,9 @@ gEngine.Core = (function() {
         gEngine.DefaultResources.initialize(function() {startScene(myGame);});
     };
 
-    var startScene = function(scene){
-        scene.loadScene();
-        gEngine.GameLoop.start(scene);
+    var startScene = function(myGame){
+        myGame.loadScene.call(myGame);
+        gEngine.GameLoop.start(myGame);
     };
 
     var clearCanvas = function(color){
