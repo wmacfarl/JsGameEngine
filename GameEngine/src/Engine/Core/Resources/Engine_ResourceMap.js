@@ -6,6 +6,7 @@ gEngine.ResourceMap = (function(){
 
     var MapEntry = function(rName){
         this.mAsset = rName;
+        this.refCount = 1;
     }
 
     var mResourceMap = {};
@@ -19,6 +20,11 @@ gEngine.ResourceMap = (function(){
             funToCall();
         }
     };
+
+    var incAssetRefCount = function(rName){
+        mResourceMap[rName].refCount+=1;
+    };
+
 
     var setLoadCompleteCallback = function(funct) {
         mLoadCompleteCallback = funct;
@@ -54,16 +60,22 @@ gEngine.ResourceMap = (function(){
     };
 
     var unloadAsset = function(rName) {
+        var c = 0;
         if (rName in mResourceMap){
-            delete mResourceMap[rName];
+            mResourceMap[rName].refCount -= 1;
+            c = mResourceMap[rName].refCount;
+            if (c === 0){
+                delete mResourceMap[rName];
+            }
         }
+        return c;
     };
 
     var mPublic = {
         asyncLoadRequested: asyncLoadRequested,
         asyncLoadCompleted: asyncLoadCompleted,
         setLoadCompleteCallback: setLoadCompleteCallback,
-
+        incAssetRefCount: incAssetRefCount,
         retrieveAsset: retrieveAsset,
         unloadAsset: unloadAsset,
         isAssetLoaded: isAssetLoaded

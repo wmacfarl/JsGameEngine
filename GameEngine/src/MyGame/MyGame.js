@@ -1,19 +1,26 @@
 "use strict"
 
 function MyGame(){
-
     this.kSceneFile = "assets/scene.xml"
     this.mSqSet = new Array();
     this.mCamera = null;
+    this.kBgClip = "assets/sounds/BGClip.mp3";
+    this.kCue = "assets/sounds/MyGame_cue.wav";
 }
 gEngine.Core.inheritPrototype(MyGame, Scene);
 
 MyGame.prototype.loadScene = function(){
     gEngine.TextFileLoader.loadTextFile(this.kSceneFile, gEngine.TextFileLoader.eTextFileType.eXMLFile);
+    gEngine.AudioClips.loadAudio(this.kBgClip);
+    gEngine.AudioClips.loadAudio(this.kCue);
 };
 
 MyGame.prototype.unloadScene = function(){
     gEngine.TextFileLoader.unloadTextFile(this.kSceneFile, gEngine.TextFileLoader.eTextFileType.eXMLFile);
+    gEngine.AudioClips.stopBackgroundAudio();
+    gEngine.AudioClips.unloadAudio(this.kCue);
+    var nextLevel = new BlueLevel(); // next level to be loaded
+    gEngine.Core.startScene(nextLevel);
 };
 
 
@@ -21,6 +28,7 @@ MyGame.prototype.initialize = function() {
     var sceneParser = new SceneFileParser(this.kSceneFile);
     this.mCamera = sceneParser.parseCamera();
     sceneParser.parseSquares(this.mSqSet);
+    gEngine.AudioClips.playBackgroundAudio(this.kBgClip);
 };
 
 MyGame.prototype.update = function(){
@@ -30,9 +38,11 @@ MyGame.prototype.update = function(){
 
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Right)){
         deltaX += 0.5;
+        gEngine.AudioClips.playACue(this.kCue);
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Left)){
         deltaX -= 0.5;
+        gEngine.AudioClips. playACue (this.kCue);
     }
 
     if (whiteXform.getXPos() > 30){

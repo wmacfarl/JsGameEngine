@@ -2,18 +2,24 @@ function BlueLevel(){
     this.kSceneFile = "assets/BlueLevel.xml";
     this.mSqSet = [];
     this.mCamera = null;
+    this.kBgClip = "assets/sounds/BGClip.mp3";
+    this.kCue = "assets/sounds/BlueLevel_cue.wav";
 }
 
 gEngine.Core.inheritPrototype(BlueLevel, Scene);
 
 BlueLevel.prototype.loadScene = function(){
     gEngine.TextFileLoader.loadTextFile(this.kSceneFile, gEngine.TextFileLoader.eTextFileType.eXMLFile)
+    gEngine.AudioClips.loadAudio(this.kBgClip);
+    gEngine.AudioClips.loadAudio(this.kCue);
 };
+
 
 BlueLevel.prototype.initialize = function(){
     var sceneParser = new SceneFileParser(this.kSceneFile);
     this.mCamera = sceneParser.parseCamera();
     sceneParser.parseSquares(this.mSqSet);
+    gEngine.AudioClips.playBackgroundAudio(this.kBgClip);
 }
 
 BlueLevel.prototype.draw = function(){
@@ -30,10 +36,12 @@ BlueLevel.prototype.update = function (){
     var deltaRot = 0;
 
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Right)){
+        gEngine.AudioClips.playACue(this.kCue);
         deltaX += 0.5;
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Left)){
         deltaX -= 0.5;
+        gEngine.AudioClips.playACue(this.kCue);
     }
 
     if (whiteXform.getXPos() > 30){
@@ -63,6 +71,9 @@ BlueLevel.prototype.update = function (){
 
 BlueLevel.prototype.unloadScene = function(){
     gEngine.TextFileLoader.unloadTextFile(this.kSceneFile);
+    gEngine.AudioClips.stopBackgroundAudio();
+    gEngine.AudioClips.unloadAudio(this.kBgClip);
+    gEngine.AudioClips.unloadAudio(this.kCue);
 
     var nextLevel = new MyGame();
     gEngine.Core.startScene(nextLevel);
